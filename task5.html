@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cricket Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f4f8;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .quiz-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .question {
+      margin: 20px 0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .options button {
+      padding: 10px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .options button:hover {
+      background: #0056b3;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-container {
+        padding: 15px;
+      }
+      .options button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>Cricket Quiz</h1>
+    <div id="quiz">
+      <p>Loading questions...</p>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const quizContainer = document.getElementById('quiz');
+    const resultContainer = document.getElementById('result');
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const questions = [
+      {
+        question: "Who has scored the most centuries in international cricket?",
+        correct_answer: "Sachin Tendulkar",
+        incorrect_answers: ["Virat Kohli", "Ricky Ponting", "Kumar Sangakkara"]
+      },
+      {
+        question: "Which country won the first ever Cricket World Cup in 1975?",
+        correct_answer: "West Indies",
+        incorrect_answers: ["Australia", "England", "India"]
+      },
+      {
+        question: "Who was the captain of India during the 2011 Cricket World Cup victory?",
+        correct_answer: "MS Dhoni",
+        incorrect_answers: ["Virat Kohli", "Sachin Tendulkar", "Sourav Ganguly"]
+      },
+      {
+        question: "Which bowler has taken the most wickets in Test cricket?",
+        correct_answer: "Muttiah Muralitharan",
+        incorrect_answers: ["Shane Warne", "Anil Kumble", "James Anderson"]
+      },
+      {
+        question: "In cricket, what does LBW stand for?",
+        correct_answer: "Leg Before Wicket",
+        incorrect_answers: ["Long Batting Wicket", "Leg Byes Wide", "Last Ball Wide"]
+      }
+    ];
+
+    function showQuestion() {
+      if (currentQuestionIndex >= questions.length) {
+        quizContainer.innerHTML = `<h2>Quiz Completed!</h2><p>Your score: ${score}/${questions.length}</p>`;
+        return;
+      }
+
+      const q = questions[currentQuestionIndex];
+      const answers = [...q.incorrect_answers, q.correct_answer].sort(() => Math.random() - 0.5);
+
+      quizContainer.innerHTML = `
+        <div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${q.question}</div>
+        <div class="options">
+          ${answers.map(answer => `<button onclick="checkAnswer('${encodeURIComponent(answer)}')">${answer}</button>`).join('')}
+        </div>
+      `;
+    }
+
+    function checkAnswer(selected) {
+      const correct = encodeURIComponent(questions[currentQuestionIndex].correct_answer);
+      if (selected === correct) {
+        score++;
+        resultContainer.textContent = 'Correct!';
+      } else {
+        resultContainer.textContent = `Wrong! Correct answer: ${decodeURIComponent(correct)}`;
+      }
+      currentQuestionIndex++;
+      setTimeout(() => {
+        resultContainer.textContent = '';
+        showQuestion();
+      }, 1500);
+    }
+
+    // Start quiz
+    showQuestion();
+  </script>
+
+</body>
+</html>
